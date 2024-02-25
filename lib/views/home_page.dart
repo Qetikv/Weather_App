@@ -9,23 +9,26 @@ class WeatherApp extends StatefulWidget {
 
 class _WeatherAppState extends State<WeatherApp> {
   final TextEditingController _cityController = TextEditingController();
-  Weather _weatherInfo = Weather(cityName: '', temperature: 0, weatherCondition: '');
+  Weather _weatherInfo =
+      Weather(cityName: '', temperature: 0, weatherCondition: '');
 
   Future<void> _fetchWeather(String cityName) async {
     try {
-      final Map<String, dynamic> data = await WeatherService.fetchWeather(cityName);
+      final Map<String, dynamic> data =
+          await WeatherService.fetchWeather(cityName);
       final Weather weather = Weather.fromJson(data);
       setState(() {
         _weatherInfo = weather;
       });
     } catch (e) {
       setState(() {
-        _weatherInfo = Weather(cityName: 'Unknown', temperature: 0, weatherCondition: 'Unknown');
+        _weatherInfo = Weather(
+            cityName: 'Unknown', temperature: 0, weatherCondition: 'Unknown');
       });
     }
   }
 
-    // Function to get the weather image URL based on the weather condition
+  // Function to get the weather image URL based on the weather condition
   String _getWeatherImageURL(String weatherCondition) {
     if (weatherCondition == 'Clear') {
       return 'assets/clear.png';
@@ -40,6 +43,9 @@ class _WeatherAppState extends State<WeatherApp> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -55,7 +61,7 @@ class _WeatherAppState extends State<WeatherApp> {
         elevation: 0,
         centerTitle: true,
       ),
-       body: Container(
+      body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -68,7 +74,7 @@ class _WeatherAppState extends State<WeatherApp> {
             Expanded(
               child: Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(screenWidth * 0.05),
                   child: TextField(
                     controller: _cityController,
                     decoration: InputDecoration(
@@ -88,24 +94,26 @@ class _WeatherAppState extends State<WeatherApp> {
             _weatherInfo.cityName.isNotEmpty
                 ? Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.1),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             'City: ${_weatherInfo.cityName}',
-                            style: const TextStyle(fontSize: 18.0, color: Colors.white),
+                            style: TextStyle(fontSize: screenWidth * 0.04, color: Colors.white),
+
                           ),
                           Text(
                             'Temperature: ${_weatherInfo.temperature.toStringAsFixed(0)}°C',
-                            style: const TextStyle(fontSize: 18.0, color: Colors.white),
+                            style: TextStyle(fontSize: screenWidth * 0.04, color: Colors.white),
                           ),
                           Text(
                             'Weather Condition: ${_weatherInfo.weatherCondition}',
-                            style: const TextStyle(fontSize: 18.0, color: Colors.white),
+                            style: TextStyle(fontSize: screenWidth * 0.04, color: Colors.white),
+
                           ),
-                          const SizedBox(height: 16.0),
+                          SizedBox(height: screenHeight * 0.03),
                           Image.asset(
                             _getWeatherImageURL(_weatherInfo.weatherCondition),
                             width: 100,
